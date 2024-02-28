@@ -7,10 +7,11 @@ module.exports = {
     resolve: {
         extensions: ['.js', '.jsx'],
     },
-    entry: './src/index.jsx',
+    entry: {
+        gameCenter: path.resolve(__dirname, 'src/game-center/index.jsx'),
+    },
     output: {
         path: path.resolve(__dirname, 'dist'),
-        filename: 'index.js',
     },
     mode: 'development',
     module: {
@@ -27,7 +28,7 @@ module.exports = {
                 }
             }
         }, {
-            test: /\.css$/,
+            test: /\.(css|less)$/,
             use: [
                 { loader: 'style-loader' },
                 {
@@ -36,12 +37,17 @@ module.exports = {
                         modules: false,
                     },
                 },
+                { loader: 'postcss-loader'},
+                { loader: 'less-loader' },
             ],
         },],
     },
     plugins: [
         // new ErrorOverlayPlugin(),
-        new HtmlWebpackPlugin({ template: './src/index.html', filename: 'index.html' }),
+        new HtmlWebpackPlugin({ 
+            template: './src/game-center/index.html', 
+            filename: 'game-center/index.html', 
+        }),
         // new CopyPlugin({
         //     patterns: [
         //         { from: "resource/img", to: "resource/img" },

@@ -8,10 +8,12 @@ module.exports = {
     resolve: {
         extensions: ['.js', '.jsx'],
     },
-    entry: './src/index.jsx',
+    entry: {
+        gameCenter: path.resolve(__dirname, 'src/game-center/index.jsx'),
+    },
     output: {
         path: path.resolve(__dirname, 'dist'),
-        filename: 'resource/js/index.js',
+        filename: 'resource/js/[name].js',
         publicPath: '../'
     },
     mode: 'production',
@@ -40,7 +42,10 @@ module.exports = {
     },
     plugins: [
         new CleanWebpackPlugin(),
-        new HtmlWebpackPlugin({ template: './src/index.html', filename: 'view/index.html' }),
+        new HtmlWebpackPlugin({ 
+            template: './src/game-center/index.html', 
+            filename: 'game-center/index.html', 
+        }),
         // new CopyPlugin({
         //     patterns: [
         //          { from: "resource/img", to: "resource/img" },

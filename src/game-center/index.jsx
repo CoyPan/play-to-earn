@@ -1,10 +1,10 @@
 /**
- * @file 简单的填写表单，跳转链接的逻辑
+ * @file 网赚首页
  */
 
 import React, { useState } from 'react';
 import ReactDOM from 'react-dom/client';
-import './index.css';
+import './index.less';
 
 const App = () => {
     return <div>123</div>
