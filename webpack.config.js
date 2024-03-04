@@ -40,7 +40,18 @@ module.exports = {
                 { loader: 'postcss-loader'},
                 { loader: 'less-loader' },
             ],
-        },],
+        },
+        {
+            test: /\.(png|jpg)$/,
+            use: [
+                { 
+                    loader: 'file-loader', 
+                    options: {
+                        name: '[path][name].[ext]',
+                    }, 
+                },
+            ],
+        }],
     },
     plugins: [
         // new ErrorOverlayPlugin(),

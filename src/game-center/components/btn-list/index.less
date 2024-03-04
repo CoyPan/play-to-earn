@@ -1,0 +1,49 @@
+.btn-list-box {
+    display: flex;
+    margin-top: 20px;
+    margin-bottom: 30px;
+    justify-content: space-between;
+
+    .btn-item {
+        width: 190px;
+        height: 60px;
+        border-radius: 10px;
+        text-align: center;
+        color: #fff;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        &.invite {
+            background: linear-gradient(360deg, #5B0EFF 0%, #8B63E5 100%);
+        }
+        &.get-credit {
+            background: linear-gradient(360deg, #FF560E 0%, #FFAB5D 100%);
+        }
+        
+        .btn-text {
+            font-weight: 700;
+            font-size: 16px;
+            line-height: 16px;
+            margin-bottom: 8px;
+            color: #FFF500;
+        }
+
+        .credit-count {
+            display: flex;
+            align-items: center;
+            justify-self: center;
+            img {
+                width: 12px;
+                height: 12px;
+                margin-right: 5px;
+            }
+            span {
+                font-size: 12px;
+                line-height: 12px;
+                font-weight: 500;
+            }
+        }
+    }
+}
+

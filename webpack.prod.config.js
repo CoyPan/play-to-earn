@@ -9,11 +9,11 @@ module.exports = {
         extensions: ['.js', '.jsx'],
     },
     entry: {
-        gameCenter: path.resolve(__dirname, 'src/game-center/index.jsx'),
+        'game-center': path.resolve(__dirname, 'src/game-center/index.jsx'),
     },
     output: {
         path: path.resolve(__dirname, 'dist'),
-        filename: 'resource/js/[name].js',
+        filename: 'resource/js/[name].[contenthash:4].js',
         publicPath: '../'
     },
     mode: 'production',
@@ -28,7 +28,7 @@ module.exports = {
                 }
             }
         }, {
-            test: /\.css$/,
+            test: /\.(css|less)$/,
             use: [
                 { loader: 'style-loader' },
                 {
@@ -37,8 +37,20 @@ module.exports = {
                         modules: false,
                     },
                 },
+                { loader: 'postcss-loader'},
+                { loader: 'less-loader' },
             ],
-        },],
+        }, {
+            test: /\.(png|jpg)$/,
+            use: [
+                { 
+                    loader: 'file-loader',  
+                    options: {
+                        name: '[path][name].[ext]',
+                    }, 
+                },
+            ],
+        }],
     },
     plugins: [
         new CleanWebpackPlugin(),
@@ -46,11 +58,11 @@ module.exports = {
             template: './src/game-center/index.html', 
             filename: 'game-center/index.html', 
         }),
-        // new CopyPlugin({
-        //     patterns: [
-        //          { from: "resource/img", to: "resource/img" },
-        //     ],
-        // }),
+        new CopyPlugin({
+            patterns: [
+                 { from: "resource/img", to: "resource/img" },
+            ],
+        }),
     ],
     optimization: {
         minimizer: [
