@@ -9,7 +9,7 @@ module.exports = {
         extensions: ['.js', '.jsx'],
     },
     entry: {
-        'game-center': path.resolve(__dirname, 'src/game-center/index.jsx'),
+        'user-center': path.resolve(__dirname, 'src/user-center/index.jsx'),
     },
     output: {
         path: path.resolve(__dirname, 'dist'),
@@ -55,8 +55,8 @@ module.exports = {
     plugins: [
         new CleanWebpackPlugin(),
         new HtmlWebpackPlugin({ 
-            template: './src/game-center/index.html', 
-            filename: 'game-center/index.html', 
+            template: './src/user-center/index.html', 
+            filename: 'user-center/index.html', 
         }),
         new CopyPlugin({
             patterns: [

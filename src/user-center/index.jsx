@@ -7,11 +7,12 @@ import ReactDOM from 'react-dom/client';
 import { Header } from './components/header';
 import { UserProfile } from './components/user-profile';
 import { BtnList } from './components/btn-list';
+import { Roulette } from './components/Roulette/index';
 import { isPC, getUserId, openAd } from './utils';
 import './index.less';
 
 
-const tele = window.Telegram.WebApp;
+const tele = window.Telegram?.WebApp ?? {};
 const webAppUser = window.Telegram?.WebApp?.initDataUnsafe?.user;
 const webAppChat = tele.initDataUnsafe?.chat;
 const initData = tele.initData;
@@ -22,6 +23,8 @@ console.log('[WebAppChat]', webAppChat);
 
 const App = () => {
 
+    const [isShowRoulette, setIsShowRoulette] = useState(false);
+
     // 点击观看视频获取积分的按钮
     const onGetCreditBtnClick = (cb) => {
        openAd(cb);
@@ -29,20 +32,35 @@ const App = () => {
 
     const onAdStatusChange = (status) => {
         console.log('[onAdStatusChange]', status)
-    }
+    };
+
+    const handleRouletteEnd = () => {
+        console.log('[RouletteEnd]');
+    };
+
+    // 点击每日积分按钮，直接打开轮盘抽奖
+    const onDailyCreditBtnClick = () => {
+        console.log('onDailyCreditBtnClick');
+        setIsShowRoulette(true);
+    };
 
     return <div className='app-box wrap'>
         <Header />
         <UserProfile avatar={webAppUser?.photo_url} name={webAppUser?.username}></UserProfile>
-        <div className='get-credit-btn' onClick={() => onGetCreditBtnClick(onAdStatusChange)}>Daily Credit</div>
+        <div className='get-credit-btn' onClick={onDailyCreditBtnClick}>Daily Credit</div>
         <div className='main-content-box'>
             <div className='content-title'>Quick Credit</div>
             <BtnList onInvite={() => {}} onGetCredit={() => { onGetCreditBtnClick(onAdStatusChange) }}></BtnList>
             <div className='content-title'>Bots For You</div>
         </div>
+        <Roulette 
+            isShow={isShowRoulette} 
+            awards={['$1', '$2', '$3', '$4']} 
+            awardIndex={1}
+            onEnd={handleRouletteEnd}
+        ></Roulette>
     </div>
 };
-
 
 // 渲染节点
 const root = ReactDOM.createRoot(document.getElementById("app"));

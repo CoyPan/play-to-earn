@@ -41,3 +41,20 @@ export function openAd(cb) {
     console.log('[options]', options);
     invokeApplixirVideoUnit(options);
 }
+
+// 处理canvas模糊问题的函数
+export function getPixelRatio(context) {
+    var backingStore = context.backingStorePixelRatio ||
+          context.webkitBackingStorePixelRatio ||
+          context.mozBackingStorePixelRatio ||
+          context.msBackingStorePixelRatio ||
+          context.oBackingStorePixelRatio ||
+          context.backingStorePixelRatio || 1;
+
+    return (window.devicePixelRatio || 1) / backingStore;
+};
+
+// 动画函数
+export function ease(start, end, percentDone) {
+    return end * percentDone * (2 - percentDone);
+}

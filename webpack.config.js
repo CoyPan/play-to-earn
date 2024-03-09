@@ -8,7 +8,7 @@ module.exports = {
         extensions: ['.js', '.jsx'],
     },
     entry: {
-        gameCenter: path.resolve(__dirname, 'src/game-center/index.jsx'),
+        userCenter: path.resolve(__dirname, 'src/user-center/index.jsx'),
     },
     output: {
         path: path.resolve(__dirname, 'dist'),
@@ -56,8 +56,8 @@ module.exports = {
     plugins: [
         // new ErrorOverlayPlugin(),
         new HtmlWebpackPlugin({ 
-            template: './src/game-center/index.html', 
-            filename: 'game-center/index.html', 
+            template: './src/user-center/index.html', 
+            filename: 'user-center/index.html', 
         }),
         // new CopyPlugin({
         //     patterns: [
