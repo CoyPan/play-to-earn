@@ -28,10 +28,10 @@ export function getUserId() {
 
 export function openAd(cb) {
     const options = {   // see online documentation for additional informaiton
-        zoneId: 2050, // required: the zone ID from the "Games" page
+        zoneId: 6229, // required: the zone ID from the "Games" page
         accountId: 8013,  // optional: your account ID (required for RMS)
-        gameId: 8548, 
-        siteId: 8548,
+        gameId: 8588, 
+        siteId: 8588,
         userId: getUserId(), // required: UUID value for current customer (required for targeted ads - UUID4 recommended)
         // custom: nnnn, // optional: custom value for RMS - use to provide additional reward information
         adStatusCb: cb, // required: callback function to provide information regarding ad status
