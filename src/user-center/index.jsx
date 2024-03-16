@@ -2,13 +2,16 @@
  * @file 网赚首页
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import ReactDOM from 'react-dom/client';
 import { Header } from './components/header';
 import { UserProfile } from './components/user-profile';
 import { BtnList } from './components/btn-list';
 import { Roulette } from './components/Roulette/index';
 import { CreditsPopup } from './components/credits-popup';
+import { DailyTask } from './components/daily-task';
+import { useLoading } from './components/use-loading-hook';
+import { useToast } from './components/use-toast-hook';
 import { lang } from './language';
 import { isPC, getUserId, openAd } from './utils';
 import './index.less';
@@ -23,17 +26,34 @@ console.log('[WebAppUser]', webAppUser);
 console.log('[WebAppChat]', webAppChat);
 
 const App = () => {
-
-    const [isShowRoulette, setIsShowRoulette] = useState(true);
+    const [isShowRoulette, setIsShowRoulette] = useState(false);
     const [earnPopup, setEarnPopup] = useState({ isShow: false, credits: 1.4 });
+    const [dailyTask, setDailyTask] = useState({ isShow: false, curIdx: 0 });
+    const { showLoading, stopLoading } = useLoading();
+    const { showToast } = useToast();
+    const statusCallback = useRef([]);
 
     // 点击观看视频获取积分的按钮
     const onGetCreditBtnClick = (cb) => {
-       openAd(cb);
+        showLoading();
+        openAd(cb);
     };
 
     const onAdStatusChange = (status) => {
-        console.log('[onAdStatusChange]', status)
+        console.log('[onAdStatusChange]', status, statusCallback.current);
+        stopLoading();
+        if (status !== 'sys-closing') {
+            statusCallback.current.push(status);
+            return;
+        }
+        if (status === 'sys-closing') {
+            const lastStatus = statusCallback.current.pop();
+            if (lastStatus === 'ad-watched') {
+                // @TODO: 视频观看完成后，增加积分
+                return setEarnPopup({ isShow: true, credits: 1.5 });
+            }
+        }
+        showToast(lang('ad.error'));
     };
 
     const handleRouletteEnd = () => {
@@ -44,9 +64,12 @@ const App = () => {
         }, 4000);
     };
 
-    // @TODO: 点击每日积分按钮，直接打开轮盘抽奖.
+    // @TODO: 点击每日积分按钮，直接弹出日常任务.
     const onDailyCreditBtnClick = () => {
-        console.log('onDailyCreditBtnClick');
+        setDailyTask({
+            isShow: true,
+            curIdx: 6,
+        });
     };
 
     // 点击邀请按钮
@@ -64,7 +87,17 @@ const App = () => {
             return {
                 ...res,
                 isShow: false
-            }
+            };
+        });
+    };
+
+    // TODO: 关闭每日提任务弹窗。
+    const onDailyTaskClose = () => {
+        setDailyTask(res => {
+            return {
+                ...res,
+                isShow: false,
+            };
         });
     };
 
@@ -74,21 +107,25 @@ const App = () => {
         <div className='get-credit-btn' onClick={onDailyCreditBtnClick}>{lang('btn.daily')}</div>
         <div className='main-content-box'>
             <div className='content-title'>{lang('section.title')}</div>
-            <BtnList 
+            <BtnList
                 onInvite={onInviteBtnClick}
                 onGetCredit={() => { onGetCreditBtnClick(onAdStatusChange) }}
             ></BtnList>
         </div>
-        <Roulette 
-            isShow={isShowRoulette} 
-            awards={['10 c', '20 c', '3 c', '4 c', '5 c', '6 c']} 
+        <Roulette
+            isShow={isShowRoulette}
+            awards={['10 c', '20 c', '3 c', '4 c', '5 c', '6 c']}
             awardIndex={1}
             onClose={() => { setIsShowRoulette(false); }}
             onEnd={handleRouletteEnd}
         ></Roulette>
-        { 
-            earnPopup.isShow === true && <CreditsPopup credits={earnPopup.credits} 
+        {
+            earnPopup.isShow === true && <CreditsPopup credits={earnPopup.credits}
                 onClose={onCloseCreditClick}></CreditsPopup>
+        }
+        {
+            dailyTask.isShow === true
+            && <DailyTask curIdx={dailyTask.curIdx} onClose={onDailyTaskClose}></DailyTask>
         }
     </div>
 };

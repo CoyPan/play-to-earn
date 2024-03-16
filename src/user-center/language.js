@@ -23,6 +23,12 @@ const TEXTS_DICT = {
             title: 'CREDITS FOR YOU',
             btn: 'Receive',
         },
+        daily: {
+            btn: 'Receive'
+        },
+        ad: {
+            error: 'load ad error',
+        }
     }
 };
 

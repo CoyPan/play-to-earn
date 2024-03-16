@@ -1,0 +1,90 @@
+.daily-task-mask {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.7);
+
+    .daily-task-box {
+        
+        position: absolute;
+        width: 100%;
+        top: 50%;
+        transform: translateY(-50%);
+
+        .daily-task-panel {
+            width: 650px;
+            height: 548px;
+            margin: 0 auto;
+            background-repeat: no-repeat;
+            background-size: contain;
+            display: grid;
+            grid-template-columns: repeat(3, 184px);
+            grid-template-rows: 150px 150px 150px;
+            justify-content: center;
+            align-content: center;
+            row-gap: 11px;
+            column-gap: 11px;
+        }
+
+        .daily-task-item {
+            width: 184px;
+            height: 150px;
+            flex-direction: column;
+            background-color: #FFEAD6;
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            position: relative;
+
+            &[data-index='6'] {
+                width: 574px;
+                height: 150px;
+                grid-column: 1 / -1
+            }
+
+            .day-index {
+                color: #000;
+                font-size: 24px;
+            }
+
+            .day-credit {
+                color: #F54710;
+            }
+
+            &[data-actived="true"] {
+                background-color: #F54D17;
+                .day-index,
+                .day-credit  {
+                    color: #fff;
+                }
+            }
+
+            .day-actived {
+                width: 50px;
+                height: 50px;
+                position: absolute;
+                right: -5px;
+                top: -5px;
+                background-size: cover;
+                background-repeat: no-repeat;
+            }
+        }
+    }
+
+    .daily-accept-btn {
+        margin: 32px auto 0;
+        width: 500px;
+        height: 80px;
+        line-height: 80px;
+        border-radius: 63px;
+        border: 1px solid #FFCC8F;
+        color: #fff;
+        font-weight: bold;
+        text-align: center;
+        background: linear-gradient(#FF9D7E, #F54610);
+    }
+}
