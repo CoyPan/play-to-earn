@@ -8,9 +8,9 @@ import { Header } from './components/header';
 import { UserProfile } from './components/user-profile';
 import { BtnList } from './components/btn-list';
 import { Roulette } from './components/Roulette/index';
+import { lang } from './language';
 import { isPC, getUserId, openAd } from './utils';
 import './index.less';
-
 
 const tele = window.Telegram?.WebApp ?? {};
 const webAppUser = window.Telegram?.WebApp?.initDataUnsafe?.user;
@@ -23,7 +23,7 @@ console.log('[WebAppChat]', webAppChat);
 
 const App = () => {
 
-    const [isShowRoulette, setIsShowRoulette] = useState(false);
+    const [isShowRoulette, setIsShowRoulette] = useState(true);
 
     // 点击观看视频获取积分的按钮
     const onGetCreditBtnClick = (cb) => {
@@ -36,31 +36,51 @@ const App = () => {
 
     const handleRouletteEnd = () => {
         console.log('[RouletteEnd]');
+        // @TODO: 加积分
+        setTimeout(() => {
+            setIsShowRoulette(false);
+        }, 4000);
     };
 
-    // 点击每日积分按钮，直接打开轮盘抽奖
+    // @TODO: 点击每日积分按钮，直接打开轮盘抽奖.
     const onDailyCreditBtnClick = () => {
         console.log('onDailyCreditBtnClick');
-        setIsShowRoulette(true);
+    };
+
+    // 点击邀请按钮
+    const onInviteBtnClick = () => {
+        const url = `<i>Hello World</i>`
+        console.log('[click invite btn click]');
+        window.location.href = `https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent('share_test')}`;
     };
 
     return <div className='app-box wrap'>
         <Header />
         <UserProfile avatar={webAppUser?.photo_url} name={webAppUser?.username}></UserProfile>
-        <div className='get-credit-btn' onClick={onDailyCreditBtnClick}>Daily Credit</div>
+        <div className='get-credit-btn' onClick={onDailyCreditBtnClick}>{lang('btn.get')}</div>
         <div className='main-content-box'>
-            <div className='content-title'>Quick Credit</div>
-            <BtnList onInvite={() => {}} onGetCredit={() => { onGetCreditBtnClick(onAdStatusChange) }}></BtnList>
-            <div className='content-title'>Bots For You</div>
+            <div className='content-title'>{lang('section.title')}</div>
+            <BtnList 
+                onInvite={onInviteBtnClick}
+                onGetCredit={() => { onGetCreditBtnClick(onAdStatusChange) }}
+            ></BtnList>
         </div>
         <Roulette 
             isShow={isShowRoulette} 
-            awards={['$1', '$2', '$3', '$4']} 
+            awards={['10 c', '20 c', '3 c', '4 c', '5 c', '6 c']} 
             awardIndex={1}
+            onClose={() => { setIsShowRoulette(false); }}
             onEnd={handleRouletteEnd}
         ></Roulette>
     </div>
 };
+
+
+
+
+
+
+
 
 // 渲染节点
 const root = ReactDOM.createRoot(document.getElementById("app"));

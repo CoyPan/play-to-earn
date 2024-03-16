@@ -1,7 +1,11 @@
 import * as tool from '../../utils';
+import awardImageUrl from '../../../../resource/img/award-icon.png';
 
 class Roulette {
     constructor({ ctx, canvas, awards, resultIdx, onEnd }) {
+
+        this.awardImg = new Image();
+        this.awardImg.src = awardImageUrl;
 
         this.ctx = ctx;
         this.canvas = canvas;
@@ -12,14 +16,14 @@ class Roulette {
         this.PI = Math.PI;
 
         // 每一个奖项块的颜色
-        this.awardsColors = ["#fe807d", "#fe7771"];
-        this.endColor = '#FF5B5C';
+        this.awardsColors = ["#fff", "#fff"];
+        this.endColor = '#FFEAD6';
         // 奖品数
         this.awardCount = this.awards.length;
         // 每一个奖品块的角度
         this.perAwardAngle = this.PI * 2 / this.awardCount;
         // 圆的半径
-        this.radius = this.canvas.height * (5 / 6) / 2;
+        this.radius = this.canvas.height / 2;
        
         // 圆心坐标
         this.x = this.canvas.width / 2;
@@ -28,7 +32,10 @@ class Roulette {
          // 文字半径
         this.textRadius = this.radius * 2 / 3;
         // 字体大小
-        this.fontSize = 14 * tool.getPixelRatio(this.ctx);
+        this.fontSize = 12 * tool.getPixelRatio(this.ctx);
+
+        // 奖品的半径
+        this.awardImgRadius = this.textRadius * 3 / 4;
 
         // 起始角度
         this.startAngle = 0;
@@ -37,7 +44,6 @@ class Roulette {
         this.duration = Math.floor((5 + Math.random() * 5) * 1000);
 
         // 最终结束时的角度
-        // this.resAngle = 40 * this.PI;
         this.resAngle = this.calResAngle(this.resultIdx, this.perAwardAngle);
     }
 
@@ -48,6 +54,9 @@ class Roulette {
 
     drawWheel(showRes = false) {
         this.awards.forEach((item, idx) => {
+
+            const isResult = showRes && idx === this.resultIdx;
+
             // 画转盘
             const startAngle = this.startAngle + idx * this.perAwardAngle;
             const endAngle = startAngle + this.perAwardAngle;
@@ -57,11 +66,14 @@ class Roulette {
             this.ctx.moveTo(this.x, this.y);
             this.ctx.arc(this.x, this.y, this.radius, startAngle, endAngle, false);
             this.ctx.fillStyle = style;
-            if(showRes && idx === this.resultIdx){
+            if(isResult){
                 this.ctx.fillStyle = this.endColor;
             }
             this.ctx.strokeStyle = style;
             this.ctx.closePath();
+            this.ctx.setLineDash([10, 10]);
+            this.ctx.lineWidth = 5;
+            this.ctx.strokeStyle = '#FF8919';
             this.ctx.stroke();
             this.ctx.fill();
             this.ctx.restore();
@@ -69,16 +81,32 @@ class Roulette {
             // 画文字
             this.ctx.save();
             const textX = this.x + this.textRadius * Math.cos(startAngle + this.perAwardAngle / 2);
-            const textY = this.y + this.textRadius * Math.sin(startAngle + this.perAwardAngle / 2);
+            const textY = this.y + this.textRadius * Math.sin(startAngle + this.perAwardAngle / 2);            
             this.ctx.translate(textX, textY);
-            this.ctx.font = `${this.fontSize}px Microsoft YaHei`;
-            this.ctx.fillStyle = '#fff';
+            
+            this.ctx.font = `bold ${this.fontSize}px Microsoft YaHei`;
+            this.ctx.fillStyle = '#F54710';
 
             // 设置文字跟随区块进行翻转
-            // this.ctx.rotate(startAngle + this.perAwardAngle / 2 + this.PI / 2);
+            this.ctx.rotate(startAngle + this.perAwardAngle / 2 + this.PI / 2);
 
             this.ctx.fillText(item, -this.ctx.measureText(item).width / 2, 0);
+
             this.ctx.restore();
+
+             // 画奖品icon
+             if(isResult) {
+                this.ctx.save();
+                const imgX = this.x + this.awardImgRadius * Math.cos(startAngle + this.perAwardAngle / 2);
+                const imgY = this.y + this.awardImgRadius * Math.sin(startAngle + this.perAwardAngle / 2);
+                this.ctx.translate(imgX, imgY);
+                // 旋转
+                this.ctx.rotate(startAngle + this.perAwardAngle / 2 + this.PI / 2);
+
+                this.ctx.drawImage(this.awardImg, -16, 0, 32, 20);
+                this.ctx.restore();
+            }
+
         });
     }
 
