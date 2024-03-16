@@ -19,6 +19,10 @@ const TEXTS_DICT = {
             get: 'Get Credit',
         },
         credit: 'Credit each',
+        popup: {
+            title: 'CREDITS FOR YOU',
+            btn: 'Receive',
+        },
     }
 };
 

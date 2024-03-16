@@ -1,0 +1,84 @@
+.credits-popup-mask {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    background-color: rgba(0,0,0, 0.7);
+    top: 0;
+    left: 0;
+
+    .credits-box {
+        position: absolute;
+        width: 100%;
+        text-align: center;
+        top: 50%;
+        transform: translateY(-50%);
+        height: 292px + 157px + 80px;
+        .popup-bg-up {
+            width: 673px;
+            height: 292px;
+            margin: 0 auto;
+            background-repeat: no-repeat;
+            background-size: contain;
+        }
+        .popup-bg {
+            width: 504px;
+            height: 329px;
+            background-repeat: no-repeat;
+            background-size: contain;
+            position: absolute;
+            top: 88px;
+            left: 50%;
+            transform: translateX(-50%);
+
+            .credits-number-box {
+                width: 380px;
+                height: 90px;
+                position: absolute;
+                top: 63px + 116px;
+                left: 50%;
+                transform: translateX(-50%);
+                background-color: #FFEAD6;
+                border-radius: 40px;
+                color: #F54710;
+                font-size: 26px;
+                font-weight: bold;
+                line-height: 90px;
+                span {
+                    font-size: 40px;
+                }
+            }
+        }
+        .popup-title-bg {
+            position: absolute;
+            top: 141px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 571px;
+            height: 115px;
+            background-repeat: no-repeat;
+            background-size: contain;
+            font-size: 40px;
+            color: #fff;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .popup-btn {
+            position: absolute;
+            top: 157px + 292px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 500px;
+            height: 80px;
+            line-height: 80px;
+            border-radius: 63px;
+            border: 1px solid #FFCC8F;
+            color: #fff;
+            font-weight: bold;
+            background: linear-gradient(#FF9D7E, #F54610);
+        }
+    }
+}

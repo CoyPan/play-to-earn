@@ -8,6 +8,7 @@ import { Header } from './components/header';
 import { UserProfile } from './components/user-profile';
 import { BtnList } from './components/btn-list';
 import { Roulette } from './components/Roulette/index';
+import { CreditsPopup } from './components/credits-popup';
 import { lang } from './language';
 import { isPC, getUserId, openAd } from './utils';
 import './index.less';
@@ -24,6 +25,7 @@ console.log('[WebAppChat]', webAppChat);
 const App = () => {
 
     const [isShowRoulette, setIsShowRoulette] = useState(true);
+    const [earnPopup, setEarnPopup] = useState({ isShow: false, credits: 1.4 });
 
     // 点击观看视频获取积分的按钮
     const onGetCreditBtnClick = (cb) => {
@@ -48,16 +50,28 @@ const App = () => {
     };
 
     // 点击邀请按钮
+    // @TODO
     const onInviteBtnClick = () => {
-        const url = `<i>Hello World</i>`
-        console.log('[click invite btn click]');
-        window.location.href = `https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent('share_test')}`;
+        // const url = `<i>Hello World</i>`
+        // console.log('[click invite btn click]');
+        // window.location.href = `https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent('share_test')}`;
+        setEarnPopup({ isShow: true, credits: 1.5 })
+    };
+
+    // 关闭credit弹窗
+    const onCloseCreditClick = () => {
+        setEarnPopup(res => {
+            return {
+                ...res,
+                isShow: false
+            }
+        });
     };
 
     return <div className='app-box wrap'>
         <Header />
         <UserProfile avatar={webAppUser?.photo_url} name={webAppUser?.username}></UserProfile>
-        <div className='get-credit-btn' onClick={onDailyCreditBtnClick}>{lang('btn.get')}</div>
+        <div className='get-credit-btn' onClick={onDailyCreditBtnClick}>{lang('btn.daily')}</div>
         <div className='main-content-box'>
             <div className='content-title'>{lang('section.title')}</div>
             <BtnList 
@@ -72,6 +86,10 @@ const App = () => {
             onClose={() => { setIsShowRoulette(false); }}
             onEnd={handleRouletteEnd}
         ></Roulette>
+        { 
+            earnPopup.isShow === true && <CreditsPopup credits={earnPopup.credits} 
+                onClose={onCloseCreditClick}></CreditsPopup>
+        }
     </div>
 };
 
