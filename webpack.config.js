@@ -71,9 +71,19 @@ module.exports = {
         proxy: { // 配置代理（只在本地开发有效，上线无效）
             // "/tazapay/create/checkout": { // 这是请求接口中要替换的标识
             //     target: "https://nudify.instamordern.com", // 被替换的目标地址，即把 /api 替换成这个
-            //     secure: false, // 若代理的地址是https协议，需要配置这个属性
+            //     secure: true, // 若代理的地址是https协议，需要配置这个属性
             //     changeOrigin: true,
             // },
+            // '/user/edit/credits': {
+            //     target: "https://net-earn.deepfun.xyz", // 被替换的目标地址，即把 /api 替换成这个
+            //     secure: true, // 若代理的地址是https协议，需要配置这个属性
+            //     changeOrigin: true,
+            // },
+            // '/user/get/credits': {
+            //     target: "https://net-earn.deepfun.xyz", // 被替换的目标地址，即把 /api 替换成这个
+            //     secure: true, // 若代理的地址是https协议，需要配置这个属性
+            //     changeOrigin: true,
+            // }
         },
         liveReload: true,
         port: 9000,

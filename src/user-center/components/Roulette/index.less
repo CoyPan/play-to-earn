@@ -34,6 +34,23 @@
         text-align: center;
         position: relative;
 
+        .canvans-box {
+            position: relative;
+            z-index: 50;
+            top: 68px;
+    
+            .roulette-start-btn {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                width: 90px;
+                height: 97px;
+                background-repeat: no-repeat;
+                background-size: contain;
+                transform: translate(-50%, -50%);
+            }
+        }
+
         .bottom-bg {
             position: absolute;
             width: 100%;
@@ -99,22 +116,6 @@
         }
     }
 
-    .canvans-box {
-        position: relative;
-        z-index: 50;
-        top: 68px;
-
-        .roulette-start-btn {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 90px;
-            height: 97px;
-            background-repeat: no-repeat;
-            background-size: contain;
-            transform: translate(-50%, -50%);
-        }
-    }
 }
 
 @keyframes roulette-star-fly1 {
@@ -156,5 +157,16 @@
     100% {
         transform: translate(250px, -250px) rotate(30deg);
         opacity: 1;
+    }
+}
+
+
+@media (min-width: 800px) {
+    .roulette-mask {
+        .roulette-outer {
+            top: 30px;
+            transform: scale(0.6);
+            transform-origin: top;
+        }  
     }
 }

@@ -2,6 +2,8 @@
  * @file 一些工具函数
  */
 
+import axios from "axios";
+
 export function isPC() {
     return /Android|webOS|iPhone|iPod|BlackBerry/i.test(navigator.userAgent) === false;
 };
@@ -58,3 +60,18 @@ export function getPixelRatio(context) {
 export function ease(start, end, percentDone) {
     return end * percentDone * (2 - percentDone);
 }
+
+export const queryObject = (() => {
+    try {
+        const queryString = window.location.search.slice(1);
+        const pairs = queryString.split('&');
+        const result = {};
+        pairs.forEach(function (item) {
+            const pair = item.split('=');
+            result[pair[0]] = decodeURIComponent(pair[1] || '');
+        });
+        return JSON.parse(JSON.stringify(result));
+    } catch (e) {
+        return {};
+    }
+  })();

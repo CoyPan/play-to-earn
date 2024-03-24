@@ -34,7 +34,7 @@
   },
   "dependencies": {
     "@telegraf/entity": "^0.5.0",
-    "axios": "^1.6.7",
+    "axios": "^1.6.8",
     "marked": "^12.0.1",
     "react": "^18.2.0",
     "react-country-state-city": "^1.1.0",

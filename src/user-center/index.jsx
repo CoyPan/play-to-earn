@@ -12,6 +12,9 @@ import { CreditsPopup } from './components/credits-popup';
 import { DailyTask } from './components/daily-task';
 import { useLoading } from './components/use-loading-hook';
 import { useToast } from './components/use-toast-hook';
+import { NEW_USER_TASK } from './const';
+import { getUserInfoById, setUserCreditsById } from './net-work';
+import { queryObject } from './utils';
 import { lang } from './language';
 import { isPC, getUserId, openAd } from './utils';
 import './index.less';
@@ -20,14 +23,19 @@ const tele = window.Telegram?.WebApp ?? {};
 const webAppUser = window.Telegram?.WebApp?.initDataUnsafe?.user;
 const webAppChat = tele.initDataUnsafe?.chat;
 const initData = tele.initData;
+const userId = queryObject['uid'];
+const rouletteAwardIdx = 0; // 轮盘默认的奖励
+const adVideoAward = 0.2;
 
 console.log('[tele]', tele);
 console.log('[WebAppUser]', webAppUser);
 console.log('[WebAppChat]', webAppChat);
+console.log('[uid]', userId);
 
 const App = () => {
     const [isShowRoulette, setIsShowRoulette] = useState(false);
-    const [earnPopup, setEarnPopup] = useState({ isShow: false, credits: 1.4 });
+    const [userInfo, setUserInfo] = useState({});
+    const [earnPopup, setEarnPopup] = useState({ isShow: false, credits: 0 });
     const [dailyTask, setDailyTask] = useState({ isShow: false, curIdx: 0 });
     const { showLoading, stopLoading } = useLoading();
     const { showToast } = useToast();
@@ -49,19 +57,21 @@ const App = () => {
         if (status === 'sys-closing') {
             const lastStatus = statusCallback.current.pop();
             if (lastStatus === 'ad-watched') {
-                // @TODO: 视频观看完成后，增加积分
-                return setEarnPopup({ isShow: true, credits: 1.5 });
+                return setEarnPopup({ isShow: true, credits: adVideoAward });
             }
         }
         showToast(lang('ad.error'));
     };
 
+    // 轮盘结束
     const handleRouletteEnd = () => {
         console.log('[RouletteEnd]');
-        // @TODO: 加积分
-        setTimeout(() => {
-            setIsShowRoulette(false);
-        }, 4000);
+        setUserCreditsById(userId, parseFloat(NEW_USER_TASK[rouletteAwardIdx]))
+            .then(() => {
+                initUserInfo();
+            }).then(() => {
+                setIsShowRoulette(false);
+            });
     };
 
     // @TODO: 点击每日积分按钮，直接弹出日常任务.
@@ -78,10 +88,11 @@ const App = () => {
         // const url = `<i>Hello World</i>`
         // console.log('[click invite btn click]');
         // window.location.href = `https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent('share_test')}`;
-        setEarnPopup({ isShow: true, credits: 1.5 })
+        // setEarnPopup({ isShow: true, credits: 1.5 })
+        TelegramGameProxy.shareScore();
     };
 
-    // 关闭credit弹窗
+    // 关闭获取credit的弹窗
     const onCloseCreditClick = () => {
         setEarnPopup(res => {
             return {
@@ -89,21 +100,54 @@ const App = () => {
                 isShow: false
             };
         });
+        setUserCreditsById(userId, adVideoAward)
+            .then(() => {
+                initUserInfo();
+            })
     };
 
-    // TODO: 关闭每日提任务弹窗。
-    const onDailyTaskClose = () => {
-        setDailyTask(res => {
-            return {
-                ...res,
-                isShow: false,
-            };
+    // 关闭每日提任务弹窗。
+    const onDailyTaskClose = (credits) => {
+        console.log('[daily credits]', credits);
+        setUserCreditsById(userId, credits)
+            .then(() => {
+                setDailyTask(res => {
+                    return {
+                        ...res,
+                        isShow: false,
+                    };
+                });
+            }).then(() => {
+                initUserInfo();
+            });
+    };
+
+    const initUserInfo = () => {
+        return getUserInfoById(userId).then(res => {
+            console.log('[res]', res);
+            if (res === false) {
+                return showToast(lang('network.get_user_info_error'));
+            }
+            setUserInfo(userInfo => ({
+                ...userInfo,
+                credits: res.points,
+            }));
+            return res.is_new;
         });
     };
 
+    // 如果是新用户，则展示抽奖轮盘
+    useEffect(() => {
+        initUserInfo().then(isNewUser => {
+            if(isNewUser) {
+                setIsShowRoulette(true);
+            }
+        });
+    }, []);
+
     return <div className='app-box wrap'>
         <Header />
-        <UserProfile avatar={webAppUser?.photo_url} name={webAppUser?.username}></UserProfile>
+        <UserProfile avatar={webAppUser?.photo_url} name={webAppUser?.username} credits={userInfo.credits}></UserProfile>
         <div className='get-credit-btn' onClick={onDailyCreditBtnClick}>{lang('btn.daily')}</div>
         <div className='main-content-box'>
             <div className='content-title'>{lang('section.title')}</div>
@@ -114,8 +158,8 @@ const App = () => {
         </div>
         <Roulette
             isShow={isShowRoulette}
-            awards={['10 c', '20 c', '3 c', '4 c', '5 c', '6 c']}
-            awardIndex={1}
+            awards={NEW_USER_TASK}
+            awardIndex={rouletteAwardIdx}
             onClose={() => { setIsShowRoulette(false); }}
             onEnd={handleRouletteEnd}
         ></Roulette>

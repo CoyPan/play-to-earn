@@ -28,6 +28,12 @@ const TEXTS_DICT = {
         },
         ad: {
             error: 'load ad error',
+        },
+        network: {
+            get_user_info_error: 'get user info error', 
+        },
+        userinfo: {
+            credits: 'My Credits >'
         }
     }
 };

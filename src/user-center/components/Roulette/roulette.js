@@ -31,8 +31,13 @@ class Roulette {
 
          // 文字半径
         this.textRadius = this.radius * 2 / 3;
+
         // 字体大小
         this.fontSize = 12 * tool.getPixelRatio(this.ctx);
+
+        if(window.innerWidth > 800) {
+            this.fontSize = 28 * tool.getPixelRatio(this.ctx);
+        }
 
         // 奖品的半径
         this.awardImgRadius = this.textRadius * 3 / 4;

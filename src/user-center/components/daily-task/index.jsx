@@ -10,7 +10,7 @@ import dailyItemActived from '../../../../resource/img/daily-item-actived.png';
 import './index.less';
 
 export const DailyTask = ({ curIdx, onClose } = {}) => {
-    return <div className='daily-task-mask' onClick={() => { onClose?.(); }}>
+    return <div className='daily-task-mask' onClick={() => { onClose?.(DAILY_TASK[curIdx]); }}>
         <div className='daily-task-box'>
             <div className='daily-task-panel' style={{ backgroundImage: `url(${dailyTaskBg})`}}>
                 {DAILY_TASK.map((item, idx) => {
