@@ -11,7 +11,7 @@ const TEXTS_DICT = {
         },
         section: {
             title: 'Quick Credit',
-
+            game: 'Game For You',
         },
         btn: {
             daily: 'Daily Credit',

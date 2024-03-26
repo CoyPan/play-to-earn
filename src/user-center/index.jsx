@@ -7,6 +7,7 @@ import ReactDOM from 'react-dom/client';
 import { Header } from './components/header';
 import { UserProfile } from './components/user-profile';
 import { BtnList } from './components/btn-list';
+import { GameList } from './components/game-list';
 import { Roulette } from './components/Roulette/index';
 import { CreditsPopup } from './components/credits-popup';
 import { DailyTask } from './components/daily-task';
@@ -155,6 +156,8 @@ const App = () => {
                 onInvite={onInviteBtnClick}
                 onGetCredit={() => { onGetCreditBtnClick(onAdStatusChange) }}
             ></BtnList>
+            <div className='content-title'>{lang('section.game')}</div>
+            <GameList />
         </div>
         <Roulette
             isShow={isShowRoulette}

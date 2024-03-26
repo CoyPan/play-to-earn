@@ -60,7 +60,7 @@ module.exports = {
         }),
         new CopyPlugin({
             patterns: [
-                 { from: "resource/img", to: "resource/img" },
+                { from: "resource/img", to: "resource/img" },
             ],
         }),
     ],
