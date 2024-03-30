@@ -32,5 +32,6 @@ export const useLoading = () => {
     return {
         showLoading,
         stopLoading,
+        isLoading,
     };
 };

@@ -14,7 +14,7 @@ import { DailyTask } from './components/daily-task';
 import { useLoading } from './components/use-loading-hook';
 import { useToast } from './components/use-toast-hook';
 import { NEW_USER_TASK } from './const';
-import { getUserInfoById, setUserCreditsById } from './net-work';
+import { getUserInfoById, setUserCreditsById, doDailySignIn, getCurSigninStatus } from './net-work';
 import { queryObject } from './utils';
 import { lang } from './language';
 import { isPC, getUserId, openAd } from './utils';
@@ -28,6 +28,9 @@ const userId = queryObject['uid'];
 const rouletteAwardIdx = 0; // 轮盘默认的奖励
 const adVideoAward = 0.2;
 
+// 是否需要进行签到奖励
+let needSignReward;
+
 console.log('[tele]', tele);
 console.log('[WebAppUser]', webAppUser);
 console.log('[WebAppChat]', webAppChat);
@@ -38,7 +41,7 @@ const App = () => {
     const [userInfo, setUserInfo] = useState({});
     const [earnPopup, setEarnPopup] = useState({ isShow: false, credits: 0 });
     const [dailyTask, setDailyTask] = useState({ isShow: false, curIdx: 0 });
-    const { showLoading, stopLoading } = useLoading();
+    const { showLoading, stopLoading, isLoading } = useLoading();
     const { showToast } = useToast();
     const statusCallback = useRef([]);
 
@@ -75,12 +78,33 @@ const App = () => {
             });
     };
 
-    // @TODO: 点击每日积分按钮，直接弹出日常任务.
-    const onDailyCreditBtnClick = () => {
+    // 点击每日积分按钮，直接弹出日常任务.
+    const onDailyCreditBtnClick = async () => {
+        if(isLoading) {
+            return;
+        }
+        showLoading();
+        const signStatus = await getCurSigninStatus(userId);
+        console.log('[signStatus]', signStatus);
+        if (signStatus.todayIsSign === false) {
+            needSignReward = true;
+        }
+        const isSignSucc = await doDailySignIn(userId);
+        
+        // 获取当天应该获取第几天的签到奖励
+        let curIdx;
+        if (signStatus.todayIsSign === true) {
+            curIdx = signStatus.dayCount;
+        } else if (signStatus.todayIsSign === false && isSignSucc) {
+            curIdx = signStatus.dayCount + 1;
+        } else {
+            curIdx = signStatus.dayCount;
+        }
         setDailyTask({
             isShow: true,
-            curIdx: 6,
+            curIdx: curIdx - 1,
         });
+        stopLoading();
     };
 
     // 点击邀请按钮
@@ -109,18 +133,22 @@ const App = () => {
 
     // 关闭每日提任务弹窗。
     const onDailyTaskClose = (credits) => {
-        console.log('[daily credits]', credits);
-        setUserCreditsById(userId, credits)
-            .then(() => {
-                setDailyTask(res => {
-                    return {
+        if (!needSignReward) {
+            return setDailyTask(res => ({
+                ...res,
+                isShow: false,
+            }));
+        } else {
+            setUserCreditsById(userId, credits)
+                .then(() => {
+                    setDailyTask(res => ({
                         ...res,
                         isShow: false,
-                    };
+                    }));
+                }).then(() => {
+                    initUserInfo();
                 });
-            }).then(() => {
-                initUserInfo();
-            });
+        }
     };
 
     const initUserInfo = () => {
