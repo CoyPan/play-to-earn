@@ -189,7 +189,8 @@ export const getCurSigninStatus = async (useid) => {
         if(lastRes?.data?.code !== 200) {
             return false;
         }
-        const allList = list.concat(lastRes.data?.data?.list ?? []);
+        const newList = lastRes.data?.data?.list ?? [];
+        const allList = newList.concat(list);
         return checkSigninDayCount(allList);
     } catch (e) {
         console.error('[setUserCreditsById error]', e);
@@ -199,7 +200,6 @@ export const getCurSigninStatus = async (useid) => {
 
 // 根据签到的天数，判断连续签到了多少天
 const checkSigninDayCount = (list) => {
-    list = [{"id":3,"user_id":6414311464,"sign_in_month":"2024-03","sign_in_date":"2024-03-30","sign_in_time":1711804186,"create_time":1711804187,"update_time":1711804187},{"id":5,"user_id":6414311464,"sign_in_month":"2024-03","sign_in_date":"2024-03-31","sign_in_time":1711897207,"create_time":1711810810,"update_time":1711810810}]
     console.log('[checkSigninDayCount]', JSON.stringify(list));
     // 当天是否已经签到
     const todayIsSign = list[list.length - 1]?.sign_in_date === signHandler.getSigninDate();
