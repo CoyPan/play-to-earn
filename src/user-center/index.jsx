@@ -86,6 +86,19 @@ const App = () => {
         showLoading();
         const signStatus = await getCurSigninStatus(userId);
         console.log('[signStatus]', signStatus);
+
+        // 当天已经签到过
+        if(signStatus.todayIsSign === true) {
+            stopLoading();
+            setDailyTask({
+                isShow: true,
+                curIdx: signStatus.dayCount - 1,
+            });
+            showToast(lang('daily.already'));
+            return;
+        }
+
+        // 当天没有签到
         if (signStatus.todayIsSign === false) {
             needSignReward = true;
         }
@@ -93,9 +106,7 @@ const App = () => {
         
         // 获取当天应该获取第几天的签到奖励
         let curIdx;
-        if (signStatus.todayIsSign === true) {
-            curIdx = signStatus.dayCount;
-        } else if (signStatus.todayIsSign === false && isSignSucc) {
+        if (signStatus.todayIsSign === false && isSignSucc) {
             curIdx = signStatus.dayCount + 1;
         } else {
             curIdx = signStatus.dayCount;
@@ -177,10 +188,11 @@ const App = () => {
     return <div className='app-box wrap'>
         <Header />
         <UserProfile avatar={webAppUser?.photo_url} name={webAppUser?.username} credits={userInfo.credits}></UserProfile>
-        <div className='get-credit-btn' onClick={onDailyCreditBtnClick}>{lang('btn.daily')}</div>
+        {/* <div className='get-credit-btn' onClick={onDailyCreditBtnClick}>{lang('btn.daily')}</div> */}
         <div className='main-content-box'>
             <div className='content-title'>{lang('section.title')}</div>
             <BtnList
+                onDailyCredit={onDailyCreditBtnClick}
                 onInvite={onInviteBtnClick}
                 onGetCredit={() => { onGetCreditBtnClick(onAdStatusChange) }}
             ></BtnList>

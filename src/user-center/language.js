@@ -24,7 +24,8 @@ const TEXTS_DICT = {
             btn: 'Receive',
         },
         daily: {
-            btn: 'Receive'
+            btn: 'Receive',
+            already: 'already got the credit today',
         },
         ad: {
             error: 'load ad error',
@@ -33,7 +34,7 @@ const TEXTS_DICT = {
             get_user_info_error: 'get user info error', 
         },
         userinfo: {
-            credits: 'My Credits >'
+            credits: 'My Credits'
         }
     }
 };
