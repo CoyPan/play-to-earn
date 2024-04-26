@@ -23,7 +23,7 @@ bot.on('inline_query', (ctx) => {
     console.log('[inline_query]', ctx);
 });
 
-bot.on('callback_query', (ctx) => {
+bot.on('callback_query', async (ctx) => {
     console.log('[callback_query]', ctx, ctx.update.callback_query.from);
     const uid = ctx.update.callback_query.from.id;
     // axios.post(`https://api.telegram.org/bot${TOKEN}/setGameScore`, {
@@ -35,7 +35,10 @@ bot.on('callback_query', (ctx) => {
     // }).catch(e => {
     //     console.log('[axios post error]', e);
     // });
-    ctx.answerGameQuery(`${web_link}?uid=${uid}`);
+    const userInfo = await bot.telegram.getUserProfilePhotos(uid);
+    const fileId = userInfo.photos[0][0].file_id;
+    const file = await bot.telegram.getFileLink(fileId);
+    ctx.answerGameQuery(`${web_link}?uid=${uid}&uname=${encodeURIComponent(ctx.update.callback_query.from.username)}&uavatar=${encodeURIComponent(file)}`);
 })
 
 bot.on(message('users_shared'), (ctx) => {

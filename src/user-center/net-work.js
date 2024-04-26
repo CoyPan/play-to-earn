@@ -106,10 +106,11 @@ export const getUserInfoById = async (uid) => {
 };
 
 // 设置用户的credits
-export const setUserCreditsById = async (uid, credits) => {
+export const setUserCreditsById = async (uid, credits, reason) => {
     const data = {
         user_id: Number(uid),
         credits: parseFloat(credits),
+        reason,
         timestamp: generateTimeStamp(),
     };
     try {

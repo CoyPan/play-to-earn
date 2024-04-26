@@ -13,7 +13,7 @@ import { CreditsPopup } from './components/credits-popup';
 import { DailyTask } from './components/daily-task';
 import { useLoading } from './components/use-loading-hook';
 import { useToast } from './components/use-toast-hook';
-import { NEW_USER_TASK } from './const';
+import { NEW_USER_TASK, CREDIT_REASON } from './const';
 import { getUserInfoById, setUserCreditsById, doDailySignIn, getCurSigninStatus } from './net-work';
 import { queryObject } from './utils';
 import { lang } from './language';
@@ -70,7 +70,7 @@ const App = () => {
     // 轮盘结束
     const handleRouletteEnd = () => {
         console.log('[RouletteEnd]');
-        setUserCreditsById(userId, parseFloat(NEW_USER_TASK[rouletteAwardIdx]))
+        setUserCreditsById(userId, parseFloat(NEW_USER_TASK[rouletteAwardIdx]), CREDIT_REASON.new_user)
             .then(() => {
                 initUserInfo();
             }).then(() => {
@@ -136,7 +136,7 @@ const App = () => {
                 isShow: false
             };
         });
-        setUserCreditsById(userId, adVideoAward)
+        setUserCreditsById(userId, adVideoAward, CREDIT_REASON.watch_video_ad)
             .then(() => {
                 initUserInfo();
             })
@@ -150,7 +150,7 @@ const App = () => {
                 isShow: false,
             }));
         } else {
-            setUserCreditsById(userId, credits)
+            setUserCreditsById(userId, credits, CREDIT_REASON.daily_task)
                 .then(() => {
                     setDailyTask(res => ({
                         ...res,
