@@ -80,6 +80,11 @@ module.exports = {
                 secure: true, // 若代理的地址是https协议，需要配置这个属性
                 changeOrigin: true,
             },
+            '/user/profile': {
+                target: "https://net-earn.deepfun.xyz", // 被替换的目标地址，即把 /api 替换成这个
+                secure: true, // 若代理的地址是https协议，需要配置这个属性
+                changeOrigin: true,
+            },
             '/user/get/credits': {
                 target: "https://net-earn.deepfun.xyz", // 被替换的目标地址，即把 /api 替换成这个
                 secure: true, // 若代理的地址是https协议，需要配置这个属性

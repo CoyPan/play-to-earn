@@ -32,6 +32,7 @@ const TEXTS_DICT = {
         },
         network: {
             get_user_info_error: 'get user info error', 
+            get_user_profile_error: 'get_user_profile_error',
         },
         userinfo: {
             credits: 'My Credits'

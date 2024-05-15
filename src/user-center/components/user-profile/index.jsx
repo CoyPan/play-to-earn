@@ -11,7 +11,7 @@ import './index.less';
 export const UserProfile = (props) => {
     return <div className='user-profile-box'>
         <img src={props.avatar ?? defaultUserAvatar} />
-        <span>{props.name ?? 'Bob' }</span>
+        <span>{props.name ?? '-' }</span>
         <div className='placeholder'></div>
         <div className='credits-box'>
             <div className='credits-desc'>{lang('userinfo.credits')}</div>

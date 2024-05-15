@@ -12,6 +12,7 @@ const URLS = {
     'editCredits': baseUrl + '/user/edit/credits',
     'doSignin': baseUrl + '/user/signin/add',
     'getSigninList': baseUrl + '/user/signin/list',
+    'getUserProfile': baseUrl + '/user/profile',
 };
 
 const key = CryptoJS.enc.Utf8.parse("77258c46234dc2d3e9cc15e4920deec3"); //16位
@@ -101,6 +102,29 @@ export const getUserInfoById = async (uid) => {
         return false;
     } catch (e) {
         console.error('[getUserInfoById error]', e);
+        return false;
+    }
+};
+
+// 获取用户的姓名、头像等信息
+export const getUserProfileInfoById = async (uid) => {
+    const data = {
+        user_id: Number(uid),
+        timestamp: generateTimeStamp(),
+    };
+    try {
+        const res = await axios.post(URLS.getUserProfile, data, {
+            headers: {
+                sign: encrypt(JSON.stringify(data)),
+            }
+        });
+        console.log('[getUserProfileInfoById]', res);
+        if (res?.data?.code === 200) {
+            return res.data.data;
+        }
+        return false;
+    } catch(e) {
+        console.error('[getUserProfileInfoById error]', e);
         return false;
     }
 };

@@ -75,3 +75,15 @@ export const queryObject = (() => {
         return {};
     }
   })();
+
+
+// 格式化base64格式的图片
+export const formatImgBase64 = (str = '') => {
+    if (!str) {
+        return str;
+    }
+    if (str.indexOf('data:image/jpeg;base64,') === 0) {
+        return str;
+    }
+    return `data:image/jpeg;base64,${str}`;
+};

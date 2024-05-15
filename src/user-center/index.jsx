@@ -14,8 +14,8 @@ import { DailyTask } from './components/daily-task';
 import { useLoading } from './components/use-loading-hook';
 import { useToast } from './components/use-toast-hook';
 import { NEW_USER_TASK, CREDIT_REASON } from './const';
-import { getUserInfoById, setUserCreditsById, doDailySignIn, getCurSigninStatus } from './net-work';
-import { queryObject } from './utils';
+import { getUserInfoById, setUserCreditsById, doDailySignIn, getCurSigninStatus, getUserProfileInfoById } from './net-work';
+import { queryObject, formatImgBase64 } from './utils';
 import { lang } from './language';
 import { isPC, getUserId, openAd } from './utils';
 import './index.less';
@@ -163,22 +163,37 @@ const App = () => {
     };
 
     const initUserInfo = () => {
-        return getUserInfoById(userId).then(res => {
-            console.log('[res]', res);
-            if (res === false) {
+        return getUserInfoById(userId).then(creditInfo => {
+            if (creditInfo === false) {
                 return showToast(lang('network.get_user_info_error'));
             }
             setUserInfo(userInfo => ({
                 ...userInfo,
-                credits: res.points,
+                credits: creditInfo.points,
             }));
-            return res.is_new;
+            return creditInfo.is_new;
+        })
+    };
+
+    // 初始化用户的名称、头像等
+    const initUserProfileInfo = () => {
+        getUserProfileInfoById(userId).then(profileInfo => {
+            if (profileInfo === false) {
+                return showToast(lang('network.get_user_profile_error'));
+            }
+            setUserInfo(userInfo => ({
+                ...userInfo,
+                photo_url: formatImgBase64(profileInfo.photos),
+                username: profileInfo.usename,
+            }));
         });
     };
 
-    // 如果是新用户，则展示抽奖轮盘
+   
     useEffect(() => {
+        initUserProfileInfo();
         initUserInfo().then(isNewUser => {
+             // 如果是新用户，则展示抽奖轮盘
             if(isNewUser) {
                 setIsShowRoulette(true);
             }
@@ -187,7 +202,7 @@ const App = () => {
 
     return <div className='app-box wrap'>
         <Header />
-        <UserProfile avatar={webAppUser?.photo_url} name={webAppUser?.username} credits={userInfo.credits}></UserProfile>
+        <UserProfile avatar={userInfo.photo_url} name={userInfo.username} credits={userInfo.credits}></UserProfile>
         {/* <div className='get-credit-btn' onClick={onDailyCreditBtnClick}>{lang('btn.daily')}</div> */}
         <div className='main-content-box'>
             <div className='content-title'>{lang('section.title')}</div>
